@@ -1,0 +1,12 @@
+services:
+  # Web Service Deployment (Full Node.js API + React Static Frontend)
+  - type: web
+    name: olist-analytics-platform
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GROQ_API_KEY
+        sync: false

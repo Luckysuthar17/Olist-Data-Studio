@@ -28,7 +28,7 @@ export const AiInsightsView: React.FC = () => {
     {
       id: 'msg-1',
       sender: 'ai',
-      text: "Hello! I am your AI Data Analyst for the Olist E-Commerce dataset. I have ingested transactional data across orders, sellers, reviews, and delivery lead times.",
+      text: "Hello! I am your Data Analyst Assistant for the Olist E-Commerce dataset. I have ingested transactional data across orders, sellers, reviews, and delivery lead times.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       findings: [
         "Orders delivered late suffer a 58.7% drop in customer review score (from 4.6 avg to 1.9 stars).",
@@ -94,7 +94,7 @@ export const AiInsightsView: React.FC = () => {
 
         if (groqRes.ok) {
           const groqData = await groqRes.json();
-          replyText = groqData.choices?.[0]?.message?.content || "Analyzed Olist dataset via Groq AI.";
+          replyText = groqData.choices?.[0]?.message?.content || "Analyzed Olist dataset successfully.";
         } else {
           throw new Error(`Groq API returned status ${groqRes.status}`);
         }
@@ -176,7 +176,7 @@ export const AiInsightsView: React.FC = () => {
         <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center space-x-2 text-slate-900 font-bold text-sm border-b border-slate-100 pb-3">
             <Zap className="w-4 h-4 text-indigo-600" />
-            <span>AI Executive Briefing</span>
+            <span>Executive Analytics Briefing</span>
           </div>
 
           <div className="space-y-3 text-xs text-slate-700">
@@ -230,7 +230,7 @@ export const AiInsightsView: React.FC = () => {
               <Bot className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Groq AI Data Analyst Assistant</h3>
+              <h3 className="text-sm font-bold text-slate-900">Data Analyst Assistant</h3>
               <p className="text-[10px] text-slate-500">Olist Dataset Insights Engine</p>
             </div>
           </div>
@@ -254,7 +254,7 @@ export const AiInsightsView: React.FC = () => {
                 <div className={`flex items-center justify-between text-[10px] mb-1 ${m.sender === 'user' ? 'text-indigo-100' : 'text-slate-500'}`}>
                   <span className="font-bold flex items-center space-x-1">
                     {m.sender === 'user' ? <User className="w-3 h-3" /> : <Sparkles className="w-3 h-3 text-indigo-600" />}
-                    <span>{m.sender === 'user' ? 'You' : 'AI Analyst'}</span>
+                    <span>{m.sender === 'user' ? 'You' : 'Data Analyst'}</span>
                   </span>
                   <span>{m.timestamp}</span>
                 </div>

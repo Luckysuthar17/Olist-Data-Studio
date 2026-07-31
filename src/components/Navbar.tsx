@@ -94,7 +94,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenD
               }`}
             >
               <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>AI Analyst</span>
+              <span>Data Analyst</span>
             </button>
 
             <button
@@ -156,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenD
           className={`flex flex-col items-center p-1.5 rounded ${activeTab === 'ai' ? 'text-indigo-600 font-bold' : 'text-slate-600'}`}
         >
           <Sparkles className="w-4 h-4" />
-          <span>AI</span>
+          <span>Analyst</span>
         </button>
         <button
           onClick={() => setActiveTab('docs')}

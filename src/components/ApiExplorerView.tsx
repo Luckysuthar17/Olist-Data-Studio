@@ -168,8 +168,8 @@ const ENDPOINTS: ApiEndpointDef[] = [
     id: 'ep-16',
     method: 'GET',
     path: '/api/v1/insights/ai',
-    title: 'AI Business Briefing Insights',
-    description: 'Retrieves AI-generated executive briefing, operational findings, and strategic recommendations.',
+    title: 'Executive Business Briefing Insights',
+    description: 'Retrieves executive briefing, operational findings, and strategic recommendations.',
     params: []
   }
 ];

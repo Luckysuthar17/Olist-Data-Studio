@@ -21,7 +21,7 @@ npm install
 \`\`\`
 
 ### 2. Environment Variables (Optional)
-Copy \`.env.example\` to \`.env\` if you wish to configure a custom Groq API key for real-time AI responses:
+Copy \`.env.example\` to \`.env\` if you wish to configure an API key for real-time assistant responses:
 
 \`\`\`bash
 cp .env.example .env
@@ -53,6 +53,22 @@ npm run start
 
 ---
 
+## 🌐 Deployment on Render (Render.com)
+
+### Web Service Deployment (Recommended)
+1. **Push Code to GitHub**: Create a repository and push your project files.
+2. **Open Render**: Log into [dashboard.render.com](https://dashboard.render.com/) and click **New +** -> **Web Service**.
+3. **Select Repository**: Connect your GitHub repository.
+4. **Configure Settings**:
+   - **Name**: \`olist-analytics-platform\`
+   - **Environment**: \`Node\`
+   - **Build Command**: \`npm install && npm run build\`
+   - **Start Command**: \`npm start\`
+5. **Environment Variables**: Add \`GROQ_API_KEY\` if using live AI insights.
+6. **Deploy**: Click **Create Web Service**. Render will build and host your application live!
+
+---
+
 ## 🚀 Key Features
 
 1. **Interactive BI Executive Dashboard (Power BI / Tableau Style)**
@@ -69,15 +85,15 @@ npm run start
      - \`GET /api/v1/analytics/delivery-performance\` - Delivery delay metrics & review impact
      - \`GET /api/v1/sellers/top\` - Top sellers leaderboard
      - \`POST /api/v1/query/sql\` - Execute custom SQL queries against the dataset
-     - \`GET /api/v1/insights/ai\` - Executive insights powered by Groq AI / Analytics Engine
+     - \`GET /api/v1/insights/ai\` - Executive insights powered by Data Analytics Engine
 
 3. **In-Browser SQL Query Studio**
    - Live query editor with schema browser across all 8 Olist tables.
    - Pre-crafted analytical SQL scripts covering MoM growth, delivery delay impact, category freight ratios, state distribution, and payment behavior.
    - Results tabular grid with execution timer and CSV export.
 
-4. **AI-Powered Data Analyst Assistant**
-   - Integration with Groq API (Llama-3.3-70b model) to explain dataset trends, generate executive summaries, perform anomaly detection, and recommend strategic actions.
+4. **Executive Data Analyst Assistant**
+   - Interactive analyst assistant to explain dataset trends, generate executive summaries, perform anomaly detection, and recommend strategic actions.
 
 ---
 
@@ -86,7 +102,7 @@ npm run start
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Recharts, Lucide Icons, Motion
 - **API Runtime**: FastAPI REST Engine simulator & Express Node server proxy
 - **Database Engine**: In-memory relational SQLite engine with Olist E-Commerce Schema
-- **AI Analytics**: Groq LLM Inference API (Llama 3.3 70B)
+- **Smart Analytics**: Automated Business Intelligence Engine
 
 ---
 

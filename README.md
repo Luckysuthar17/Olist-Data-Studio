@@ -14,9 +14,8 @@ Welcome to the **Olist E-Commerce Analytics Platform**. This project provides a 
 
 ### Step-by-Step Local Setup
 
-#### 1. Download or Export Code
-- **Export via AI Studio**: Click **Settings** -> **Export to GitHub** or **Download ZIP**.
-- Unzip the downloaded file onto your local computer.
+#### 1. Download or Clone Code
+- Clone or download this project repository to your local computer.
 
 #### 2. Open Terminal & Navigate to Project Directory
 ```bash
@@ -30,7 +29,7 @@ npm install
 ```
 
 #### 4. Environment Configuration (Optional)
-Copy `.env.example` to `.env` if you want to provide a custom Groq API Key for AI features:
+Copy `.env.example` to `.env` if you want to provide an API Key for natural language assistant features:
 ```bash
 cp .env.example .env
 ```
@@ -55,6 +54,41 @@ npm run start
 
 ---
 
+## 🌐 Deployment on Render (Render.com)
+
+You can easily deploy this full-stack application to **Render** as either a **Web Service** or a **Static Site**.
+
+### Option A: Web Service Deployment (Recommended)
+This deploys both the Node.js API server and serves the compiled React application.
+
+1. **Push your code to GitHub**: Create a repository and push your project code.
+2. **Log into Render**: Go to [dashboard.render.com](https://dashboard.render.com/) and click **New +** -> **Web Service**.
+3. **Connect Repository**: Select your GitHub repository.
+4. **Configure Web Service**:
+   - **Name**: `olist-analytics-platform`
+   - **Environment / Runtime**: `Node`
+   - **Region**: Choose your nearest region (e.g., Oregon, Frankfurt, Singapore)
+   - **Branch**: `main`
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm start`
+5. **Environment Variables** (Optional):
+   - Under **Environment Variables**, add:
+     - `GROQ_API_KEY`: *(Optional API Key for natural language assistant)*
+     - `NODE_ENV`: `production`
+6. **Click "Create Web Service"**: Render will build and deploy your app. Once deployed, you will get a live URL (e.g., `https://olist-analytics-platform.onrender.com`).
+
+---
+
+### Option B: Render Blueprint Deployment (1-Click)
+Since this repository includes a `render.yaml` file:
+
+1. Log into [Render Dashboard](https://dashboard.render.com/).
+2. Click **New +** -> **Blueprint**.
+3. Connect your repository. Render will automatically read `render.yaml` and set up the Web Service automatically.
+4. Click **Apply**.
+
+---
+
 ## 🛠️ Project Structure & Key Files
 
 ```
@@ -70,7 +104,7 @@ npm run start
 │   │   ├── DashboardView.tsx      # Power BI / Tableau style BI dashboard
 │   │   ├── ApiExplorerView.tsx    # FastAPI / OpenAPI Swagger interactive suite
 │   │   ├── SqlStudioView.tsx      # In-browser SQL Query Studio & Schema Explorer
-│   │   ├── AiInsightsView.tsx     # Groq AI Data Analyst assistant
+│   │   ├── AiInsightsView.tsx     # Executive Data Analyst assistant
 │   │   ├── DocumentationView.tsx  # Interactive docs viewer
 │   │   └── DatasetViewerModal.tsx # Raw Olist dataset table viewer
 │   ├── data/
@@ -99,8 +133,8 @@ npm run start
    - Live query editor with schema browser across all 8 Olist tables.
    - Pre-crafted analytical SQL scripts with execution metrics and CSV export.
 
-4. **AI-Powered Executive Insights**
-   - Live Groq AI Data Analyst assistant to ask natural language questions about sales, logistics, freight, delays, and sellers.
+4. **Executive Data Analyst Assistant**
+   - Live Data Analyst assistant to ask natural language questions about sales, logistics, freight, delays, and sellers.
 
 ---
 
