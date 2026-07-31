@@ -1,0 +1,6 @@
+{
+  "name": "Olist E-Commerce Analytics Platform",
+  "description": "Comprehensive E-Commerce Data Analytics, REST API Explorer, SQL Queries, and Interactive BI Dashboard for the Olist dataset",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
