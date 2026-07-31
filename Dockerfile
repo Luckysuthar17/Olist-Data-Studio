@@ -1,27 +1,21 @@
-# Use official lightweight Python image
-FROM python:3.10-slim
+FROM node:20-alpine
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    python3-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Copy package files
+COPY package*.json ./
 
-# Copy backend requirement specifications
-COPY backend/requirements.txt ./backend/requirements.txt
+# Install dependencies
+RUN npm install
 
-# Install Python packages
-RUN pip install --no-cache-dir -r backend/requirements.txt
+# Copy all files
+COPY . .
 
-# Copy application files
-COPY backend ./backend
+# Build application
+RUN npm run build
 
-# Initialize database
-RUN python3 backend/init_db.py
+EXPOSE 3000
 
-EXPOSE 8000
+# Start server
+CMD ["npm", "start"]
 
-# Start FastAPI server using Uvicorn
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]

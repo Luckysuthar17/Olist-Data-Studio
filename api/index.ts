@@ -1,9 +1,22 @@
 import express, { Request, Response } from 'express';
-import { handleApiRequest } from '../src/utils/apiEngine';
+import { handleApiRequest, getAnalystInsights } from '../src/utils/apiEngine';
 
 const app = express();
 
 app.use(express.json());
+
+app.post('/api/v1/analyze', (req: Request, res: Response) => {
+  const prompt = req.body?.prompt || (req.query?.prompt as string) || 'Give an executive overview of the Olist dataset';
+  const insights = getAnalystInsights(prompt);
+  res.json({
+    status: 'success',
+    statusCode: 200,
+    timestamp: new Date().toISOString(),
+    endpoint: '/api/v1/analyze',
+    method: 'POST',
+    data: insights,
+  });
+});
 
 app.all('*', (req: Request, res: Response) => {
   const method = req.method as 'GET' | 'POST';
