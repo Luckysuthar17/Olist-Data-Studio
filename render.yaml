@@ -1,10 +1,12 @@
 services:
-  # Python FastAPI Web Service (Pure Python + SQLite + Pandas API Backend)
+  # Web Service Deployment (Full React Analytics UI + Express API Server)
   - type: web
-    name: olist-fastapi-backend
-    runtime: python
-    buildCommand: pip install -r backend/requirements.txt && python3 backend/init_db.py
-    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    name: olist-analytics-platform
+    runtime: node
+    buildCommand: python3 backend/init_db.py && npm install && npm run build
+    startCommand: npm start
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.10.12
+      - key: NODE_ENV
+        value: production
+      - key: GROQ_API_KEY
+        sync: false
