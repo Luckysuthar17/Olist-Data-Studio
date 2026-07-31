@@ -99,10 +99,11 @@ npm run start
 
 ## 🛠️ Tech Stack & Architecture
 
+- **Core Backend**: Python 3, FastAPI, SQLite3 (olist.db), Pandas
+- **API Runtime**: FastAPI REST Application & Express Node.js Server Proxy
+- **Database Engine**: Relational SQLite Database with Primary Keys, Foreign Keys, & Indexing
+- **Analytics Engine**: Pandas DataFrame Aggregation & Optimized SQL Engine
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Recharts, Lucide Icons, Motion
-- **API Runtime**: FastAPI REST Engine simulator & Express Node server proxy
-- **Database Engine**: In-memory relational SQLite engine with Olist E-Commerce Schema
-- **Smart Analytics**: Automated Business Intelligence Engine
 
 ---
 

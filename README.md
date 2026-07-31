@@ -138,5 +138,15 @@ Since this repository includes a `render.yaml` file:
 
 ---
 
+## 💻 Tech Stack
+
+- **Backend Language**: Python 3 & TypeScript
+- **REST API Framework**: FastAPI (Python) & Express / Node.js
+- **Database Engine**: Relational SQLite3 (`olist.db`) with Primary & Foreign Keys
+- **Data Analytics & Processing**: Pandas & SQL Aggregation Engine
+- **Frontend Framework**: React 19, Tailwind CSS, Recharts, Lucide Icons, Motion
+
+---
+
 ## 📄 License
 Distributed under the MIT License.
