@@ -1,8 +1,15 @@
 {
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/api/v1/(.*)",
+      "destination": "/api"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/index.html"
     }
   ]
 }

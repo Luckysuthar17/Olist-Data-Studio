@@ -1,12 +1,10 @@
 services:
-  # Web Service Deployment (Full React Analytics UI + Express API Server)
   - type: web
-    name: olist-analytics-platform
+    name: olist-analytics-app
     runtime: node
-    buildCommand: python3 backend/init_db.py && npm install && npm run build
-    startCommand: npm start
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: GROQ_API_KEY
-        sync: false
