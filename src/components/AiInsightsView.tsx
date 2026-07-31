@@ -62,15 +62,46 @@ export const AiInsightsView: React.FC = () => {
     if (!queryText) setInputQuery('');
     setLoading(true);
 
-    // Call Gemini API if available, or fallback to rule-based intelligence engine
+    // Call Groq API or Gemini API if available, or fallback to rule-based intelligence engine
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
+      const groqKey = process.env.GROQ_API_KEY || (import.meta as any).env?.VITE_GROQ_API_KEY;
+      const geminiKey = process.env.GEMINI_API_KEY;
+
       let replyText = '';
       let findingsList: string[] = [];
       let recsList: string[] = [];
 
-      if (apiKey && apiKey !== 'MY_GEMINI_API_KEY') {
-        const ai = new GoogleGenAI({ apiKey });
+      if (groqKey && groqKey !== 'MY_GROQ_API_KEY') {
+        const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${groqKey}`
+          },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are an expert Game & E-Commerce Data Analyst for the Brazilian Olist marketplace. Dataset context: Total GMV ~R$ 55,000, 350 orders across SP (40%), RJ (18%), MG (12%). 72% Credit Card purchases with 3.8 avg installments. On-time deliveries average 4.6 stars, delayed deliveries average 1.9 stars. Provide concise, actionable insights.'
+              },
+              {
+                role: 'user',
+                content: query
+              }
+            ],
+            temperature: 0.5
+          })
+        });
+
+        if (groqRes.ok) {
+          const groqData = await groqRes.json();
+          replyText = groqData.choices?.[0]?.message?.content || "Analyzed Olist dataset via Groq AI.";
+        } else {
+          throw new Error(`Groq API returned status ${groqRes.status}`);
+        }
+      } else if (geminiKey && geminiKey !== 'MY_GEMINI_API_KEY') {
+        const ai = new GoogleGenAI({ apiKey: geminiKey });
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: `You are an expert Game & E-Commerce Data Analyst for the Brazilian Olist marketplace.
