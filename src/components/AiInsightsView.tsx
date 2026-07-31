@@ -12,7 +12,7 @@ import {
   Zap,
   ArrowRight
 } from 'lucide-react';
-import { OLIST_DATABASE } from '../data/olistData';
+import { getAnalystInsights } from '../utils/apiEngine';
 
 interface ChatMessage {
   id: string;
@@ -61,78 +61,36 @@ export const AiInsightsView: React.FC = () => {
     if (!queryText) setInputQuery('');
     setLoading(true);
 
-    // Call Groq API if available, or fallback to rule-based intelligence engine
     try {
-      const groqKey = process.env.GROQ_API_KEY || (import.meta as any).env?.VITE_GROQ_API_KEY;
-
       let replyText = '';
       let findingsList: string[] = [];
       let recsList: string[] = [];
 
-      if (groqKey && groqKey !== 'MY_GROQ_API_KEY') {
-        const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      try {
+        const res = await fetch('/api/v1/analyze', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${groqKey}`
-          },
-          body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
-            messages: [
-              {
-                role: 'system',
-                content: 'You are an expert Game & E-Commerce Data Analyst for the Brazilian Olist marketplace. Dataset context: Total GMV ~R$ 55,000, 350 orders across SP (40%), RJ (18%), MG (12%). 72% Credit Card purchases with 3.8 avg installments. On-time deliveries average 4.6 stars, delayed deliveries average 1.9 stars. Provide concise, actionable insights.'
-              },
-              {
-                role: 'user',
-                content: query
-              }
-            ],
-            temperature: 0.5
-          })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: query }),
         });
 
-        if (groqRes.ok) {
-          const groqData = await groqRes.json();
-          replyText = groqData.choices?.[0]?.message?.content || "Analyzed Olist dataset successfully.";
-        } else {
-          throw new Error(`Groq API returned status ${groqRes.status}`);
+        if (res.ok) {
+          const apiRes = await res.json();
+          if (apiRes.data) {
+            replyText = apiRes.data.replyText || `Analysis completed for "${query}":`;
+            findingsList = apiRes.data.findings || [];
+            recsList = apiRes.data.recommendations || [];
+          }
         }
-      } else {
-        // Smart Contextual Engine Fallback
-        const lowerQ = query.toLowerCase();
+      } catch (e) {
+        console.warn('Backend API request failed, falling back to local analysis engine:', e);
+      }
 
-        if (lowerQ.includes('delay') || lowerQ.includes('shipping') || lowerQ.includes('logistics')) {
-          replyText = "Analyzing logistics & delivery bottleneck performance across Brazilian states:";
-          findingsList = [
-            "Carrier transit from seller to customer takes an average of 8.2 days, accounting for 72% of total fulfillment time.",
-            "Longer transit distances to Northeastern states (BA, PE, CE) increase delay likelihood by 3.2x compared to SP."
-          ];
-          recsList = [
-            "Partner with local regional carriers in Salvador and Recife.",
-            "Enforce strict 24-hour seller dispatch limits upon order approval."
-          ];
-        } else if (lowerQ.includes('payment') || lowerQ.includes('credit') || lowerQ.includes('installment')) {
-          replyText = "Analyzing payment method dynamics and installment adoption:";
-          findingsList = [
-            "72% of purchases use Credit Card, with buyers opting for an average of 3.8 monthly installments.",
-            "High-ticket electronics & watches (>R$ 200) see 84% installment usage, making 6-month interest-free options crucial."
-          ];
-          recsList = [
-            "Promote 6-10 month interest-free installment options for electronics.",
-            "Offer 5% instant discount for Boleto or PIX transactions to reduce merchant processing fees."
-          ];
-        } else {
-          replyText = `Based on our deep analytical query execution for "${query}":`;
-          findingsList = [
-            "SP and RJ represent the core engine of Olist revenue, generating over R$ 32,000 in GMV.",
-            "Top categories (Bed Bath & Table, Health & Beauty, Sports & Leisure) maintain steady repeat order volume."
-          ];
-          recsList = [
-            "Focus marketing campaign budget on high-LTV categories in SP & MG.",
-            "Bundle complementary items to increase Average Order Value (AOV)."
-          ];
-        }
+      // If replyText was not set by API, execute local intelligent analytical engine
+      if (!replyText) {
+        const localInsights = getAnalystInsights(query);
+        replyText = localInsights.replyText;
+        findingsList = localInsights.findings;
+        recsList = localInsights.recommendations;
       }
 
       const aiMsg: ChatMessage = {
@@ -146,13 +104,16 @@ export const AiInsightsView: React.FC = () => {
 
       setMessages(prev => [...prev, aiMsg]);
     } catch (err) {
+      const fallbackInsights = getAnalystInsights(query);
       setMessages(prev => [
         ...prev,
         {
           id: `ai-err-${Date.now()}`,
           sender: 'ai',
-          text: "I analyzed the Olist dataset records. Delivery delays strongly correlate with review drops, while Credit Card installments drive high-AOV sales.",
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          text: fallbackInsights.replyText,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          findings: fallbackInsights.findings,
+          recommendations: fallbackInsights.recommendations,
         }
       ]);
     } finally {
