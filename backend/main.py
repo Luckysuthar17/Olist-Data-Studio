@@ -5,6 +5,8 @@ Tech Stack: Python 3, FastAPI, SQLite3, Pandas
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import sqlite3
 import os
 from typing import Optional, List, Dict, Any
@@ -80,8 +82,8 @@ def execute_query(query: str, params: tuple = ()) -> List[Dict[str, Any]]:
         conn.close()
         return result
 
-@app.get("/")
-def read_root():
+@app.get("/api/status", summary="API Status")
+def read_status():
     return {
         "status": "online",
         "service": "Olist E-Commerce Analytics API",
@@ -93,6 +95,36 @@ def read_root():
         },
         "documentation": "/docs"
     }
+
+DIST_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "dist")
+
+if os.path.exists(DIST_DIR):
+    assets_dir = os.path.join(DIST_DIR, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/", summary="Serve React Web App")
+    def serve_root():
+        index_file = os.path.join(DIST_DIR, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        return read_status()
+
+    @app.get("/{full_path:path}", summary="SPA Fallback Route")
+    def serve_spa(full_path: str):
+        if full_path in ["docs", "redoc", "openapi.json"] or full_path.startswith("api/"):
+            raise HTTPException(status_code=404, detail="Endpoint not found")
+        file_path = os.path.join(DIST_DIR, full_path)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+        index_file = os.path.join(DIST_DIR, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        return read_status()
+else:
+    @app.get("/", summary="API Root")
+    def read_root():
+        return read_status()
 
 # ================================
 # PART 2: CORE ENTITY REST ENDPOINTS
