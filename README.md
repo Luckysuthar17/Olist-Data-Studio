@@ -1,6 +1,100 @@
-# Olist E-Commerce Data Analytics & FastAPI Platform
+# Olist E-Commerce Data Analytics & Platform
 
 Welcome to the **Olist E-Commerce Analytics Platform**. This project provides a full-stack data engineering, REST API backend, interactive SQL query engine, and interactive BI dashboard solution for analyzing the Brazilian Olist E-Commerce dataset.
+
+---
+
+## 🚀 Live Deployment & Links
+
+- 🌐 **Live Web Application**: [https://ais-pre-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app](https://ais-pre-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app)
+- 💻 **Development Server**: [https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app](https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app)
+- 📁 **GitHub Repository**: [https://github.com/Luckysuthar17/Olist-Data-Studio](https://github.com/Luckysuthar17/Olist-Data-Studio)
+
+---
+
+## 📋 Submission Requirements & Deliverables Summary
+
+| Requirement | Deliverable Details | Link / Access |
+| :--- | :--- | :--- |
+| **1. Live Deployment Link** | Full-stack production build hosted live on Cloud Run / Render | [Live Application Link](https://ais-pre-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app) |
+| **2. GitHub Repository** | Public repository containing full source code, backend API, React BI application, and documentation | [GitHub Repo Link](https://github.com/Luckysuthar17/Olist-Data-Studio) |
+| **3. Power BI / Tableau** | Live Web BI Dashboard mirroring Power BI / Tableau interactive capabilities (slicers, KPIs, cross-filtering) + raw CSV data exports for `.pbix` / `.twbx` importing | Built-in Executive Dashboard tab + Raw CSV exports |
+| **4. README** | Complete documentation detailing setup, API endpoints, SQL queries, business insights, and assumptions | This `README.md` file |
+| **5. Dashboard Screenshots** | High-resolution dashboard previews embedded in Documentation tab | Accessible in Documentation View & README |
+| **6. SQL Scripts** | Comprehensive analytical SQL queries for revenue, logistics, freight, and customer satisfaction | Detailed in [Analytical SQL Scripts](#-analytical-sql-scripts) section & `src/data/sqlQueries.ts` |
+| **7. Assumptions Made** | Documented key business assumptions driving GMV, lead times, freight impact, and review score metrics | Detailed in [Key Business Assumptions Made](#-key-business-assumptions-made) section |
+
+---
+
+## 📌 Key Business Assumptions Made
+
+1. **Delivered Status**: Deliveries marked as `delivered` are treated as completed revenue generating transactions for Gross Merchandise Value (GMV) calculations.
+2. **Freight Charges**: Shipping costs (`freight_value`) are analyzed separately from item prices (`price`) to evaluate regional logistical burden without distorting product pricing.
+3. **Delivery Lead Time**: Estimated transit time vs actual transit time is calculated from `order_delivered_customer_date` relative to `order_estimated_delivery_date`.
+4. **Customer Review Impact**: Review scores (`review_score`) are mapped to delivery delays; orders delivered past `order_estimated_delivery_date` are categorized as Delayed.
+5. **Installment Financing**: Credit card payments with >1 installment are treated as deferred consumer financing driving higher Average Order Value (AOV).
+6. **Geographic Distribution**: Primary demand is anchored in the Southeast region (SP, RJ, MG), while distant regions (Northeast/North) face higher shipping cost friction and delivery lead times.
+
+---
+
+## 🛢️ Analytical SQL Scripts
+
+### 1. Executive Revenue & Order Volume Breakdown
+```sql
+SELECT 
+  COUNT(DISTINCT o.order_id) AS total_orders,
+  ROUND(SUM(oi.price), 2) AS total_gmv,
+  ROUND(AVG(oi.price), 2) AS average_order_value,
+  ROUND(SUM(oi.freight_value), 2) AS total_freight_cost
+FROM orders o
+JOIN order_items oi ON o.order_id = oi.order_id
+WHERE o.order_status = 'delivered';
+```
+
+### 2. State-Wise Regional Performance & Freight Burden
+```sql
+SELECT 
+  c.customer_state,
+  COUNT(DISTINCT o.order_id) AS order_count,
+  ROUND(SUM(oi.price), 2) AS total_revenue,
+  ROUND(AVG(oi.freight_value), 2) AS avg_freight_per_order,
+  ROUND((SUM(oi.freight_value) / SUM(oi.price)) * 100, 2) AS freight_burden_pct
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN order_items oi ON o.order_id = oi.order_id
+WHERE o.order_status = 'delivered'
+GROUP BY c.customer_state
+ORDER BY total_revenue DESC;
+```
+
+### 3. Delivery Lead Time vs Review Score Correlation
+```sql
+SELECT 
+  CASE 
+    WHEN o.order_delivered_customer_date > o.order_estimated_delivery_date THEN 'Delayed'
+    ELSE 'On-Time'
+  END AS delivery_performance,
+  COUNT(DISTINCT o.order_id) AS total_orders,
+  ROUND(AVG(r.review_score), 2) AS average_review_score,
+  ROUND(AVG(JULIANDAY(o.order_delivered_customer_date) - JULIANDAY(o.order_purchase_timestamp)), 1) AS avg_delivery_days
+FROM orders o
+JOIN order_reviews r ON o.order_id = r.order_id
+WHERE o.order_delivered_customer_date IS NOT NULL
+GROUP BY delivery_performance;
+```
+
+### 4. Payment Method & Installment Impact on Basket Size
+```sql
+SELECT 
+  p.payment_type,
+  COUNT(DISTINCT p.order_id) AS transaction_count,
+  ROUND(AVG(p.payment_installments), 1) AS avg_installments,
+  ROUND(AVG(p.payment_value), 2) AS avg_transaction_value,
+  ROUND(SUM(p.payment_value), 2) AS total_payment_volume
+FROM order_payments p
+GROUP BY p.payment_type
+ORDER BY total_payment_volume DESC;
+```
 
 ---
 
