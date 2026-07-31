@@ -8,3 +8,5 @@ coverage/
 !.env.example
 __pycache__/
 *.pyc
+*.db
+olist.db

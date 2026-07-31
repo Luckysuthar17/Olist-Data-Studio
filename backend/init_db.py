@@ -9,6 +9,13 @@ def init_database():
     Initializes SQLite database for Olist E-Commerce dataset using Python 3 and SQLite3.
     Creates structured tables with Primary Keys, Foreign Keys, and seeds dataset records.
     """
+    # If database file exists, remove it first to prevent malformed disk image errors
+    if os.path.exists(DB_PATH):
+        try:
+            os.remove(DB_PATH)
+        except Exception as e:
+            print(f"Notice: Could not remove existing database file: {e}")
+
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
