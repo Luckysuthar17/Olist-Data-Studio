@@ -97,6 +97,76 @@ const ENDPOINTS: ApiEndpointDef[] = [
   {
     id: 'ep-8',
     method: 'GET',
+    path: '/api/v1/products',
+    title: 'Get Products Catalog',
+    description: 'Retrieves paginated list of products in the Olist database.',
+    params: [
+      { name: 'page', type: 'integer', default: '1', description: 'Page number' },
+      { name: 'limit', type: 'integer', default: '10', description: 'Records per page' }
+    ]
+  },
+  {
+    id: 'ep-9',
+    method: 'GET',
+    path: '/api/v1/customers',
+    title: 'Get Customers List',
+    description: 'Retrieves paginated list of customers with zip code, city, and state information.',
+    params: [
+      { name: 'page', type: 'integer', default: '1', description: 'Page number' },
+      { name: 'limit', type: 'integer', default: '10', description: 'Records per page' }
+    ]
+  },
+  {
+    id: 'ep-10',
+    method: 'GET',
+    path: '/api/v1/categories',
+    title: 'Get Categories List',
+    description: 'Returns list of all distinct product categories.',
+    params: []
+  },
+  {
+    id: 'ep-11',
+    method: 'GET',
+    path: '/api/v1/analytics/top-selling-products',
+    title: 'Top 10 Selling Products',
+    description: 'Returns top 10 products sorted by volume of units sold.',
+    params: []
+  },
+  {
+    id: 'ep-12',
+    method: 'GET',
+    path: '/api/v1/analytics/monthly-revenue',
+    title: 'Monthly Revenue Trend',
+    description: 'Aggregates total GMV payment volume grouped by year-month.',
+    params: []
+  },
+  {
+    id: 'ep-13',
+    method: 'GET',
+    path: '/api/v1/analytics/revenue-by-state',
+    title: 'Revenue Distribution by State',
+    description: 'Aggregates total sales revenue across Brazilian state codes.',
+    params: []
+  },
+  {
+    id: 'ep-14',
+    method: 'GET',
+    path: '/api/v1/analytics/cancellation-rate',
+    title: 'Order Cancellation Rate',
+    description: 'Calculates overall percentage of canceled orders.',
+    params: []
+  },
+  {
+    id: 'ep-15',
+    method: 'GET',
+    path: '/api/v1/analytics/repeat-customers',
+    title: 'Repeat Customer Metrics',
+    description: 'Measures total unique customers vs repeat buyers count and repeat rate percentage.',
+    params: []
+  },
+  {
+    id: 'ep-16',
+    method: 'GET',
     path: '/api/v1/insights/ai',
     title: 'AI Business Briefing Insights',
     description: 'Retrieves AI-generated executive briefing, operational findings, and strategic recommendations.',

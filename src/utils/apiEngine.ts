@@ -408,13 +408,330 @@ export function handleApiRequest(
     };
   }
 
-  // Default Fallback Not Found
-  return {
-    status: 'error',
-    statusCode: 404,
-    timestamp,
-    endpoint,
-    method,
-    message: `API endpoint '${endpoint}' with method '${method}' was not found.`,
-  };
+  // Endpoint: Products List
+  if (endpoint === '/api/v1/products' && method === 'GET') {
+    const page = parseInt(queryParams.page || '1', 10);
+    const limit = parseInt(queryParams.limit || '10', 10);
+    const startIndex = (page - 1) * limit;
+    const paginated = products.slice(startIndex, startIndex + limit);
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      queryParams,
+      data: paginated,
+      meta: {
+        page,
+        limit,
+        totalRecords: products.length,
+        executionTimeMs: parseFloat((endTime - startTime).toFixed(2)),
+      }
+    };
+  }
+
+  // Endpoint: Single Product
+  if (endpoint.startsWith('/api/v1/products/') && method === 'GET') {
+    const prodId = endpoint.replace('/api/v1/products/', '').trim();
+    const prod = products.find(p => p.product_id === prodId || p.product_id === `prod_${prodId.padStart(5, '0')}`);
+
+    if (!prod) {
+      return {
+        status: 'error',
+        statusCode: 404,
+        timestamp,
+        endpoint,
+        method,
+        message: `Product with ID '${prodId}' not found.`,
+      };
+    }
+
+    const itemsForProd = orderItems.filter(i => i.product_id === prod.product_id);
+    const totalRev = itemsForProd.reduce((sum, i) => sum + i.price, 0);
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: {
+        ...prod,
+        total_items_sold: itemsForProd.length,
+        total_revenue_generated: parseFloat(totalRev.toFixed(2)),
+      },
+      meta: {
+        executionTimeMs: parseFloat((endTime - startTime).toFixed(2)),
+      }
+    };
+  }
+
+  // Endpoint: Customers List
+  if (endpoint === '/api/v1/customers' && method === 'GET') {
+    const page = parseInt(queryParams.page || '1', 10);
+    const limit = parseInt(queryParams.limit || '10', 10);
+    const startIndex = (page - 1) * limit;
+    const paginated = customers.slice(startIndex, startIndex + limit);
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      queryParams,
+      data: paginated,
+      meta: {
+        page,
+        limit,
+        totalRecords: customers.length,
+        executionTimeMs: parseFloat((endTime - startTime).toFixed(2)),
+      }
+    };
+  }
+
+  // Endpoint: Single Customer
+  if (endpoint.startsWith('/api/v1/customers/') && method === 'GET') {
+    const custId = endpoint.replace('/api/v1/customers/', '').trim();
+    const cust = customers.find(c => c.customer_id === custId || c.customer_id === `c_${custId.padStart(5, '0')}`);
+
+    if (!cust) {
+      return {
+        status: 'error',
+        statusCode: 404,
+        timestamp,
+        endpoint,
+        method,
+        message: `Customer with ID '${custId}' not found.`,
+      };
+    }
+
+    const custOrders = orders.filter(o => o.customer_id === cust.customer_id);
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: {
+        ...cust,
+        orders_count: custOrders.length,
+        orders: custOrders,
+      },
+      meta: {
+        executionTimeMs: parseFloat((endTime - startTime).toFixed(2)),
+      }
+    };
+  }
+
+  // Endpoint: Categories & Translations
+  if (endpoint === '/api/v1/categories' && method === 'GET') {
+    const catSet = Array.from(new Set(products.map(p => p.product_category_name_english)));
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: catSet,
+      meta: {
+        totalRecords: catSet.length,
+        executionTimeMs: parseFloat((endTime - startTime).toFixed(2)),
+      }
+    };
+  }
+
+  if (endpoint === '/api/v1/categories/translation' && method === 'GET') {
+    const translations = products.map(p => ({
+      product_category_name: p.product_category_name,
+      product_category_name_english: p.product_category_name_english
+    })).filter((v, i, a) => a.findIndex(t => t.product_category_name === v.product_category_name) === i);
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: translations,
+      meta: {
+        totalRecords: translations.length,
+        executionTimeMs: parseFloat((endTime - startTime).toFixed(2)),
+      }
+    };
+  }
+
+  // Endpoint: Order Details endpoint
+  if (endpoint.endsWith('/details') && method === 'GET') {
+    const orderId = endpoint.replace('/api/v1/orders/', '').replace('/details', '').trim();
+    const order = orders.find(o => o.order_id.toLowerCase() === orderId.toLowerCase() || o.order_id === `ord_${orderId.padStart(5, '0')}`);
+
+    if (!order) {
+      return {
+        status: 'error',
+        statusCode: 404,
+        timestamp,
+        endpoint,
+        method,
+        message: `Order '${orderId}' not found.`,
+      };
+    }
+
+    const customer = customers.find(c => c.customer_id === order.customer_id);
+    const items = orderItems.filter(i => i.order_id === order.order_id);
+    const payments = orderPayments.filter(p => p.order_id === order.order_id);
+    const review = orderReviews.find(r => r.order_id === order.order_id);
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: {
+        order_info: order,
+        customer_info: customer,
+        item_list: items,
+        payment_history: payments,
+        review_details: review
+      },
+      meta: {
+        executionTimeMs: parseFloat((endTime - startTime).toFixed(2)),
+      }
+    };
+  }
+
+  // Advanced Analytics Endpoints:
+  if (endpoint === '/api/v1/analytics/top-selling-products' && method === 'GET') {
+    const counts: Record<string, { product_id: string; category: string; units_sold: number; revenue: number }> = {};
+    orderItems.forEach(i => {
+      const prod = products.find(p => p.product_id === i.product_id);
+      if (!counts[i.product_id]) {
+        counts[i.product_id] = { product_id: i.product_id, category: prod?.product_category_name_english || 'other', units_sold: 0, revenue: 0 };
+      }
+      counts[i.product_id].units_sold += 1;
+      counts[i.product_id].revenue += i.price;
+    });
+
+    const topSelling = Object.values(counts).sort((a, b) => b.units_sold - a.units_sold).slice(0, 10);
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: topSelling,
+      meta: { executionTimeMs: parseFloat((endTime - startTime).toFixed(2)) }
+    };
+  }
+
+  if (endpoint === '/api/v1/analytics/monthly-revenue' && method === 'GET') {
+    const monthMap: Record<string, number> = {};
+    orders.forEach(o => {
+      const month = o.order_purchase_timestamp.substring(0, 7);
+      const payments = orderPayments.filter(p => p.order_id === o.order_id);
+      const sum = payments.reduce((acc, p) => acc + p.payment_value, 0);
+      monthMap[month] = (monthMap[month] || 0) + sum;
+    });
+
+    const monthlyList = Object.entries(monthMap).map(([m, r]) => ({
+      year_month: m,
+      revenue: parseFloat(r.toFixed(2))
+    })).sort((a, b) => a.year_month.localeCompare(b.year_month));
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: monthlyList,
+      meta: { executionTimeMs: parseFloat((endTime - startTime).toFixed(2)) }
+    };
+  }
+
+  if (endpoint === '/api/v1/analytics/revenue-by-state' && method === 'GET') {
+    const stateMap: Record<string, number> = {};
+    orders.forEach(o => {
+      const cust = customers.find(c => c.customer_id === o.customer_id);
+      const state = cust ? cust.customer_state : 'SP';
+      const payments = orderPayments.filter(p => p.order_id === o.order_id);
+      const sum = payments.reduce((acc, p) => acc + p.payment_value, 0);
+      stateMap[state] = (stateMap[state] || 0) + sum;
+    });
+
+    const stateList = Object.entries(stateMap).map(([s, r]) => ({
+      customer_state: s,
+      revenue: parseFloat(r.toFixed(2))
+    })).sort((a, b) => b.revenue - a.revenue);
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: stateList,
+      meta: { executionTimeMs: parseFloat((endTime - startTime).toFixed(2)) }
+    };
+  }
+
+  if (endpoint === '/api/v1/analytics/cancellation-rate' && method === 'GET') {
+    const total = orders.length;
+    const canceled = orders.filter(o => o.order_status === 'canceled').length;
+    const rate = total > 0 ? (canceled / total) * 100 : 0;
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: {
+        total_orders: total,
+        canceled_orders: canceled,
+        cancellation_rate_pct: parseFloat(rate.toFixed(2))
+      },
+      meta: { executionTimeMs: parseFloat((endTime - startTime).toFixed(2)) }
+    };
+  }
+
+  if (endpoint === '/api/v1/analytics/repeat-customers' && method === 'GET') {
+    const custOrderCounts: Record<string, number> = {};
+    customers.forEach(c => {
+      custOrderCounts[c.customer_unique_id] = (custOrderCounts[c.customer_unique_id] || 0) + 1;
+    });
+
+    const totalUnique = Object.keys(custOrderCounts).length;
+    const repeatCount = Object.values(custOrderCounts).filter(cnt => cnt > 1).length;
+
+    const endTime = performance.now();
+    return {
+      status: 'success',
+      statusCode: 200,
+      timestamp,
+      endpoint,
+      method,
+      data: {
+        unique_customers: totalUnique,
+        repeat_customers: repeatCount,
+        repeat_rate_pct: totalUnique > 0 ? parseFloat(((repeatCount / totalUnique) * 100).toFixed(2)) : 0
+      },
+      meta: { executionTimeMs: parseFloat((endTime - startTime).toFixed(2)) }
+    };
+  }
 }
