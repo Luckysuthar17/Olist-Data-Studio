@@ -12,7 +12,6 @@ import {
   Zap,
   ArrowRight
 } from 'lucide-react';
-import { GoogleGenAI } from '@google/genai';
 import { OLIST_DATABASE } from '../data/olistData';
 
 interface ChatMessage {
@@ -62,10 +61,9 @@ export const AiInsightsView: React.FC = () => {
     if (!queryText) setInputQuery('');
     setLoading(true);
 
-    // Call Groq API or Gemini API if available, or fallback to rule-based intelligence engine
+    // Call Groq API if available, or fallback to rule-based intelligence engine
     try {
       const groqKey = process.env.GROQ_API_KEY || (import.meta as any).env?.VITE_GROQ_API_KEY;
-      const geminiKey = process.env.GEMINI_API_KEY;
 
       let replyText = '';
       let findingsList: string[] = [];
@@ -100,23 +98,6 @@ export const AiInsightsView: React.FC = () => {
         } else {
           throw new Error(`Groq API returned status ${groqRes.status}`);
         }
-      } else if (geminiKey && geminiKey !== 'MY_GEMINI_API_KEY') {
-        const ai = new GoogleGenAI({ apiKey: geminiKey });
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: `You are an expert Game & E-Commerce Data Analyst for the Brazilian Olist marketplace.
-Dataset Context:
-- Total GMV: ~R$ 55,000 across 350 orders.
-- States: SP (40% sales), RJ (18%), MG (12%), RS (8%), PR (7%).
-- Payment: 72% Credit Card (avg 3.8 installments), 16% Boleto, 7% Voucher, 5% Debit.
-- Delivery: On-time delivery gives ~4.6 star review, delayed delivery gives ~1.9 stars.
-
-User Question: "${query}"
-
-Provide a concise, professional analysis with key data insights and strategic recommendations.`,
-        });
-
-        replyText = response.text || "Analyzed Olist dataset successfully.";
       } else {
         // Smart Contextual Engine Fallback
         const lowerQ = query.toLowerCase();
@@ -249,7 +230,7 @@ Provide a concise, professional analysis with key data insights and strategic re
               <Bot className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-slate-900">Gemini Data Analyst Assistant</h3>
+              <h3 className="text-sm font-bold text-slate-900">Groq AI Data Analyst Assistant</h3>
               <p className="text-[10px] text-slate-500">Olist Dataset Insights Engine</p>
             </div>
           </div>

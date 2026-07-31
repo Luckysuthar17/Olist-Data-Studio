@@ -21,7 +21,7 @@ npm install
 \`\`\`
 
 ### 2. Environment Variables (Optional)
-Copy \`.env.example\` to \`.env\` if you wish to configure a custom Gemini API key for real-time AI responses:
+Copy \`.env.example\` to \`.env\` if you wish to configure a custom Groq API key for real-time AI responses:
 
 \`\`\`bash
 cp .env.example .env
@@ -69,7 +69,7 @@ npm run start
      - \`GET /api/v1/analytics/delivery-performance\` - Delivery delay metrics & review impact
      - \`GET /api/v1/sellers/top\` - Top sellers leaderboard
      - \`POST /api/v1/query/sql\` - Execute custom SQL queries against the dataset
-     - \`GET /api/v1/insights/ai\` - Executive insights powered by Gemini AI / Analytics Engine
+     - \`GET /api/v1/insights/ai\` - Executive insights powered by Groq AI / Analytics Engine
 
 3. **In-Browser SQL Query Studio**
    - Live query editor with schema browser across all 8 Olist tables.
@@ -77,7 +77,7 @@ npm run start
    - Results tabular grid with execution timer and CSV export.
 
 4. **AI-Powered Data Analyst Assistant**
-   - Integration with Google Gemini API to explain dataset trends, generate executive summaries, perform anomaly detection, and recommend strategic actions.
+   - Integration with Groq API (Llama-3.3-70b model) to explain dataset trends, generate executive summaries, perform anomaly detection, and recommend strategic actions.
 
 ---
 
@@ -86,7 +86,7 @@ npm run start
 - **Frontend**: React 19, TypeScript, Tailwind CSS, Recharts, Lucide Icons, Motion
 - **API Runtime**: FastAPI REST Engine simulator & Express Node server proxy
 - **Database Engine**: In-memory relational SQLite engine with Olist E-Commerce Schema
-- **AI Analytics**: @google/genai (Gemini 2.5/Flash AI models)
+- **AI Analytics**: Groq LLM Inference API (Llama 3.3 70B)
 
 ---
 

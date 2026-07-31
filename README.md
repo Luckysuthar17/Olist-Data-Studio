@@ -30,7 +30,7 @@ npm install
 ```
 
 #### 4. Environment Configuration (Optional)
-Copy `.env.example` to `.env` if you want to provide a custom Google Gemini API Key for AI features:
+Copy `.env.example` to `.env` if you want to provide a custom Groq API Key for AI features:
 ```bash
 cp .env.example .env
 ```
@@ -70,7 +70,7 @@ npm run start
 │   │   ├── DashboardView.tsx      # Power BI / Tableau style BI dashboard
 │   │   ├── ApiExplorerView.tsx    # FastAPI / OpenAPI Swagger interactive suite
 │   │   ├── SqlStudioView.tsx      # In-browser SQL Query Studio & Schema Explorer
-│   │   ├── AiInsightsView.tsx     # Gemini AI Data Analyst assistant
+│   │   ├── AiInsightsView.tsx     # Groq AI Data Analyst assistant
 │   │   ├── DocumentationView.tsx  # Interactive docs viewer
 │   │   └── DatasetViewerModal.tsx # Raw Olist dataset table viewer
 │   ├── data/
@@ -100,7 +100,7 @@ npm run start
    - Pre-crafted analytical SQL scripts with execution metrics and CSV export.
 
 4. **AI-Powered Executive Insights**
-   - Live Gemini AI Data Analyst assistant to ask natural language questions about sales, logistics, freight, delays, and sellers.
+   - Live Groq AI Data Analyst assistant to ask natural language questions about sales, logistics, freight, delays, and sellers.
 
 ---
 
