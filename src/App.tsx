@@ -63,12 +63,6 @@ export default function App() {
               <Database className="w-3.5 h-3.5 text-emerald-600" />
               <span>SQL Queries</span>
             </button>
-            <button
-              onClick={() => setActiveTab('docs')}
-              className="hover:text-indigo-600 transition-colors font-medium"
-            >
-              <span>Methodology & Docs</span>
-            </button>
           </div>
 
         </div>

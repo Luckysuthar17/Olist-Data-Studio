@@ -4,7 +4,6 @@ import {
   Terminal, 
   Database, 
   Sparkles, 
-  FileText, 
   Table, 
   TrendingUp, 
   ShieldCheck,
@@ -96,18 +95,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenD
               <Sparkles className="w-4 h-4 text-amber-500" />
               <span>Data Analyst</span>
             </button>
-
-            <button
-              onClick={() => setActiveTab('docs')}
-              className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                activeTab === 'docs'
-                  ? 'bg-white text-slate-900 shadow-xs font-semibold border border-slate-200/60'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
-              }`}
-            >
-              <FileText className="w-4 h-4 text-slate-600" />
-              <span>Documentation</span>
-            </button>
           </nav>
 
           {/* Right Action & Dataset Pill */}
@@ -157,13 +144,6 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenD
         >
           <Sparkles className="w-4 h-4" />
           <span>Analyst</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('docs')}
-          className={`flex flex-col items-center p-1.5 rounded ${activeTab === 'docs' ? 'text-indigo-600 font-bold' : 'text-slate-600'}`}
-        >
-          <FileText className="w-4 h-4" />
-          <span>Docs</span>
         </button>
       </div>
     </header>
