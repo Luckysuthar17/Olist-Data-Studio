@@ -6,9 +6,7 @@ Welcome to the **Olist E-Commerce Analytics Platform**. This project provides a 
 
 ## 🚀 Live Deployment & Links
 
-- 🌐 **Live Web Application**: [https://ais-pre-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app](https://ais-pre-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app)
-- 💻 **Development Server**: [https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app](https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app)
-- 📁 **GitHub Repository**: [https://github.com/Luckysuthar17/Olist-Data-Studio](https://github.com/Luckysuthar17/Olist-Data-Studio)
+- 🌐 **Live Web Application**: [https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app](https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app)
 
 ---
 
@@ -16,7 +14,7 @@ Welcome to the **Olist E-Commerce Analytics Platform**. This project provides a 
 
 | Requirement | Deliverable Details | Link / Access |
 | :--- | :--- | :--- |
-| **1. Live Deployment Link** | Full-stack production build hosted live on Cloud Run / Render | [Live Application Link](https://ais-pre-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app) |
+| **1. Live Deployment Link** | Full-stack production build hosted live on Cloud Run / Render | [Live Application Link](https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app) |
 | **2. GitHub Repository** | Public repository containing full source code, backend API, React BI application, and documentation | [GitHub Repo Link](https://github.com/Luckysuthar17/Olist-Data-Studio) |
 | **3. Power BI / Tableau** | Live Web BI Dashboard mirroring Power BI / Tableau interactive capabilities (slicers, KPIs, cross-filtering) + raw CSV data exports for `.pbix` / `.twbx` importing | Built-in Executive Dashboard tab + Raw CSV exports |
 | **4. README** | Complete documentation detailing setup, API endpoints, SQL queries, business insights, and assumptions | This `README.md` file |
@@ -145,41 +143,6 @@ npm run build
 # Start production server
 npm run start
 ```
-
----
-
-## 🌐 Deployment on Render (Render.com)
-
-You can easily deploy this full-stack application to **Render** as either a **Web Service** or a **Static Site**.
-
-### Option A: Web Service Deployment (Recommended)
-This deploys both the Node.js API server and serves the compiled React application.
-
-1. **Push your code to GitHub**: Create a repository and push your project code.
-2. **Log into Render**: Go to [dashboard.render.com](https://dashboard.render.com/) and click **New +** -> **Web Service**.
-3. **Connect Repository**: Select your GitHub repository.
-4. **Configure Web Service**:
-   - **Name**: `olist-analytics-platform`
-   - **Environment / Runtime**: `Node`
-   - **Region**: Choose your nearest region (e.g., Oregon, Frankfurt, Singapore)
-   - **Branch**: `main`
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
-5. **Environment Variables** (Optional):
-   - Under **Environment Variables**, add:
-     - `GROQ_API_KEY`: *(Optional API Key for natural language assistant)*
-     - `NODE_ENV`: `production`
-6. **Click "Create Web Service"**: Render will build and deploy your app. Once deployed, you will get a live URL (e.g., `https://olist-analytics-platform.onrender.com`).
-
----
-
-### Option B: Render Blueprint Deployment (1-Click)
-Since this repository includes a `render.yaml` file:
-
-1. Log into [Render Dashboard](https://dashboard.render.com/).
-2. Click **New +** -> **Blueprint**.
-3. Connect your repository. Render will automatically read `render.yaml` and set up the Web Service automatically.
-4. Click **Apply**.
 
 ---
 
