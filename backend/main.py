@@ -31,11 +31,37 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "olist.db")
+DEFAULT_DB_PATH = os.path.join(os.path.dirname(__file__), "olist.db")
+TMP_DB_PATH = "/tmp/olist.db"
+
+def resolve_db_path() -> str:
+    # 1. Check if olist.db exists in backend folder
+    if os.path.exists(DEFAULT_DB_PATH) and os.path.getsize(DEFAULT_DB_PATH) > 0:
+        return DEFAULT_DB_PATH
+    # 2. Check if /tmp/olist.db exists
+    if os.path.exists(TMP_DB_PATH) and os.path.getsize(TMP_DB_PATH) > 0:
+        return TMP_DB_PATH
+    # 3. Try initializing at DEFAULT_DB_PATH
+    try:
+        from backend.init_db import init_database
+        init_database(DEFAULT_DB_PATH)
+        if os.path.exists(DEFAULT_DB_PATH):
+            return DEFAULT_DB_PATH
+    except Exception:
+        pass
+    # 4. Fallback to initializing at /tmp/olist.db
+    try:
+        from backend.init_db import init_database
+        init_database(TMP_DB_PATH)
+        return TMP_DB_PATH
+    except Exception:
+        pass
+    return DEFAULT_DB_PATH
 
 def get_db_connection():
     """Obtain a SQLite database connection with Row factory."""
-    conn = sqlite3.connect(DB_PATH)
+    db_path = resolve_db_path()
+    conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
 

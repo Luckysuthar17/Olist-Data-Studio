@@ -4,19 +4,20 @@ import random
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "olist.db")
 
-def init_database():
+def init_database(target_path=None):
     """
     Initializes SQLite database for Olist E-Commerce dataset using Python 3 and SQLite3.
     Creates structured tables with Primary Keys, Foreign Keys, and seeds dataset records.
     """
+    db_file = target_path if target_path else DB_PATH
     # If database file exists, remove it first to prevent malformed disk image errors
-    if os.path.exists(DB_PATH):
+    if os.path.exists(db_file):
         try:
-            os.remove(DB_PATH)
+            os.remove(db_file)
         except Exception as e:
             print(f"Notice: Could not remove existing database file: {e}")
 
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(db_file)
     cursor = conn.cursor()
 
     # Enable Foreign Key constraints
