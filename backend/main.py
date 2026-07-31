@@ -19,7 +19,10 @@ except ImportError:
 app = FastAPI(
     title="Olist E-Commerce Analytics REST API",
     description="Production REST API for Olist marketplace built with FastAPI, SQLite, and Pandas.",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None
 )
 
 # Enable CORS for frontend integration
@@ -90,8 +93,7 @@ def read_root():
             "framework": "FastAPI",
             "database": "SQLite3",
             "data_analysis": "Pandas" if HAS_PANDAS else "SQLite3 Engine"
-        },
-        "documentation": "/docs"
+        }
     }
 
 # ================================
