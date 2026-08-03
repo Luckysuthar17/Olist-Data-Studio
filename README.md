@@ -6,7 +6,7 @@ Welcome to the **Olist E-Commerce Analytics Platform**. This project provides a 
 
 ## 🚀 Live Deployment & Links
 
-- 🌐 **Live Web Application**: [https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app](https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app)
+- 🌐 **Live Web Application**: https://olist-data-studio.onrender.com/
 
 ---
 
@@ -14,7 +14,7 @@ Welcome to the **Olist E-Commerce Analytics Platform**. This project provides a 
 
 | Requirement | Deliverable Details | Link / Access |
 | :--- | :--- | :--- |
-| **1. Live Deployment Link** | Full-stack production build hosted live on Cloud Run / Render | [Live Application Link](https://ais-dev-xykbiufzfbofw3346kfwa5-7248979194.asia-east1.run.app) |
+| **1. Live Deployment Link** | Full-stack production build hosted live on Render | [Live Application Link]([https://olist-data-studio.onrender.com/]) |
 | **2. GitHub Repository** | Public repository containing full source code, backend API, React BI application, and documentation | [GitHub Repo Link](https://github.com/Luckysuthar17/Olist-Data-Studio) |
 | **3. Power BI / Tableau** | Live Web BI Dashboard mirroring Power BI / Tableau interactive capabilities (slicers, KPIs, cross-filtering) + raw CSV data exports for `.pbix` / `.twbx` importing | Built-in Executive Dashboard tab + Raw CSV exports |
 | **4. README** | Complete documentation detailing setup, API endpoints, SQL queries, business insights, and assumptions | This `README.md` file |
